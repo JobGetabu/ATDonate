@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.button.MaterialButton;
+import android.support.design.chip.Chip;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
@@ -45,7 +46,7 @@ public class DonateFragment extends BottomSheetDialogFragment {
     public static final String TAG = "DonateFrag";
     //For the emulator, connecting to local host
     private final String host = "192.168.8.101";
-    private final int port = 8088;
+    private final int port = 8080;
 
     @BindView(R.id.contr_groupname)
     TextView contrGroupname;
@@ -64,6 +65,10 @@ public class DonateFragment extends BottomSheetDialogFragment {
     ImageButton dntEImg;
     @BindView(R.id.dnt_phone_num)
     TextInputLayout dntPhoneNum;
+    @BindView(R.id.mpesachip)
+    Chip mpesachip;
+    @BindView(R.id.airtimechip)
+    Chip airtimechip;
 
 
     //starter progress
@@ -218,13 +223,18 @@ public class DonateFragment extends BottomSheetDialogFragment {
     @OnClick(R.id.contr_contrbtn)
     public void onContrContrbtnClicked() {
 
-        if (validateOnPay()){
+        if (validateOnPay()) {
 
-            sendMessage("0708440184","Donor test app");
+            String am = contrAmountinput.getEditText().getText().toString();
+            String pn = dntPhoneNum.getEditText().getText().toString();
+
+            //sendMessage(pn, "Donor test app");
+
+
         }
     }
 
-    @OnClick({R.id.dnt_p,R.id.dnt_e_img})
+    @OnClick({R.id.dnt_p, R.id.dnt_e_img})
     public void onPhoneEditIcon() {
         dntPhoneNum.setVisibility(View.VISIBLE);
         String ph = dntP.getText().toString();
@@ -247,19 +257,19 @@ public class DonateFragment extends BottomSheetDialogFragment {
     /*
    Implementation of our sendMessage method
     */
-    private void sendMessage(final String number, final String message){
+    private void sendMessage(final String number, final String message) {
 
         /*
         get our sms service and use it to send the message
          */
-        @SuppressLint("StaticFieldLeak")AsyncTask<Void, String, Void> smsTask = new AsyncTask<Void, String, Void>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, String, Void> smsTask = new AsyncTask<Void, String, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
 
                 /*
                 put it in try catch block
                  */
-                try{
+                try {
 
                     //Log this
                     Log.e("SMS INFO", "Attempting to send SMS");
@@ -268,13 +278,18 @@ public class DonateFragment extends BottomSheetDialogFragment {
                     SmsService smsService = AfricasTalking.getSmsService();
 
                     //Send the sms, get the response
-                    List<Recipient> recipients = smsService.send(message, new String[] {number});
+                    List<Recipient> recipients = smsService.send(message, new String[]{number});
 
                     /*
                     Log the response
                      */
                     Log.e("SMS RESPONSE", recipients.get(0).messageId + " " + recipients.get(0).status);
-                } catch (IOException e){
+
+                    if (recipients.get(0).status == "Success") {
+
+                    }
+
+                } catch (IOException e) {
 
                     Log.e("SMS FAILURE", e.toString());
                 }
@@ -288,7 +303,7 @@ public class DonateFragment extends BottomSheetDialogFragment {
     /*
    Implementation of sendPayment()
     */
-    private void sendPayment(final String number, final String amount){
+    private void sendPayment(final String number, final String amount) {
 
         /*
         implement a demo checkout to this app
@@ -300,16 +315,16 @@ public class DonateFragment extends BottomSheetDialogFragment {
                 /*
                 same try catch block
                  */
-                try{
+                try {
 
                     //Log it
-                    Log.e("PAYMENT ALERT","Trying to checkout");
+                    Log.e("PAYMENT ALERT", "Trying to checkout");
 
                     //get our payment service
                     PaymentService paymentService = AfricasTalking.getPaymentService();
 
                     //Create a checkout request
-                    MobileCheckoutRequest checkoutRequest = new MobileCheckoutRequest("Donation with AT","KES " + amount, number);
+                    MobileCheckoutRequest checkoutRequest = new MobileCheckoutRequest("Donation with AT", "KES " + amount, number);
 
                     //Initiate the checkout, using the checkoutrequest
                     CheckoutResponse response = paymentService.checkout(checkoutRequest);
@@ -317,9 +332,9 @@ public class DonateFragment extends BottomSheetDialogFragment {
                     //Log the response
                     Log.e("PAYMENT RESPONSE", response.transactionId + " " + response.status + " " + response.description);
 
-                } catch (IOException e){
+                } catch (IOException e) {
 
-                    Log.e("PAYMENT FAILURE","Failed to check out with exception " + e.toString());
+                    Log.e("PAYMENT FAILURE", "Failed to check out with exception " + e.toString());
                 }
                 return null;
             }
@@ -332,13 +347,13 @@ public class DonateFragment extends BottomSheetDialogFragment {
     /*
     implementation of sendAirtime()
      */
-    private void sendAirtime(final HashMap<String, String> recipient, final String sendToName){
+    private void sendAirtime(final HashMap<String, String> recipient, final String sendToName) {
 
         /*
         Run our code in a separate thread from the UI thread, using AsyncTask. Required by Android for all Network calls
          */
 
-        @SuppressLint("StaticFieldLeak") AsyncTask <Void, String, Void> taskSendAirtime = new AsyncTask<Void, String, Void>() {
+        @SuppressLint("StaticFieldLeak") AsyncTask<Void, String, Void> taskSendAirtime = new AsyncTask<Void, String, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
 
@@ -357,13 +372,13 @@ public class DonateFragment extends BottomSheetDialogFragment {
                     AirtimeResponse response = service.send(recipient);
 
                     //Log our success message
-                    Log.e("AIRTIME SUCCESS","Sent airtime worth " + response.totalAmount + " to " + sendToName);
-                } catch (IOException e){
+                    Log.e("AIRTIME SUCCESS", "Sent airtime worth " + response.totalAmount + " to " + sendToName);
+                } catch (IOException e) {
 
                     /*
                     Log our failure
                      */
-                    Log.e("AIRTIME FAILURE","Failed to send airtime with exception " + e.toString());
+                    Log.e("AIRTIME FAILURE", "Failed to send airtime with exception " + e.toString());
                 }
 
                 return null;
@@ -377,18 +392,18 @@ public class DonateFragment extends BottomSheetDialogFragment {
     /*
     implementation of connectToServer()
      */
-    private void connectToServer(){
+    private void connectToServer() {
 
         //Initialize te sdk, and connect to our server. Do this in a try catch block
-        try{
+        try {
 
 
 
             /*
             Put a notice in our log that we are attempting to initialize
              */
-            Log.e("NOTICE","Attempting to intialize server");
-            AfricasTalking.initialize(host, port,true);
+            Log.e("NOTICE", "Attempting to intialize server");
+            AfricasTalking.initialize(host, port, true);
 
             //Use AT's Logger to get any message
             AfricasTalking.setLogger(new Logger() {
@@ -398,20 +413,35 @@ public class DonateFragment extends BottomSheetDialogFragment {
                     /*
                     Log this too
                      */
-                    Log.e("FROM AT LOGGER",message + " " + args.toString());
+                    Log.e("FROM AT LOGGER", message + " " + args.toString());
                 }
             });
 
             /*
             Final log to tell us if successful
              */
-            Log.e("SERVER SUCCESS","Managed to connect to server");
-        } catch (IOException e){
+            Log.e("SERVER SUCCESS", "Managed to connect to server");
+        } catch (IOException e) {
 
             /*
             Log our failure to connect
              */
             Log.e("SERVER ERROR", "Failed to connect to server");
+        }
+    }
+
+    @OnClick(R.id.mpesachip)
+    public void onMpesachipClicked() {
+
+        if (airtimechip.isChecked()){
+            airtimechip.setChecked(false);
+        }
+    }
+
+    @OnClick(R.id.airtimechip)
+    public void onAirtimechipClicked() {
+        if (mpesachip.isChecked()){
+            mpesachip.setChecked(false);
         }
     }
 }

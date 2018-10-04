@@ -16,7 +16,7 @@ public class MyServer {
     private static final String APIKey = "5376d3534e487fd26e124a2941e63b046112a4680984cef6488208764051eb8e"; //Put your API Key here
 
     //for our server's port. Will use 8080
-    private static final int port = 8088;
+    private static final int port = 8080;
 
     /*
     Now, to our main method
