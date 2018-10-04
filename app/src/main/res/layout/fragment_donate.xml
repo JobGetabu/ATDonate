@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_normal"
-            android:text="Contribute to Group"
+            android:text="Give your donations"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
             android:textAlignment="center"
             android:textAllCaps="true"
@@ -59,13 +59,13 @@
             android:id="@+id/textView6contr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:layout_alignParentStart="true"
-            android:layout_marginStart="16dp"
+            android:layout_alignParentTop="true"
             android:layout_below="@+id/textView3"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="52dp"
             android:paddingRight="16dp"
-            android:text="Account Name: " />
+            android:text="Recipients: " />
 
         <TextView
             android:id="@+id/contr_groupname"
@@ -76,7 +76,7 @@
             android:layout_marginEnd="8dp"
             android:layout_toEndOf="@+id/textView6contr"
             android:textSize="16sp"
-            tools:text="group name" />
+            tools:text="Aid groups, Charity and NGOs" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -163,7 +163,7 @@
         app:chipSpacingVertical="@dimen/spacing_micro"
         app:chipStrokeColor="@android:color/darker_gray"
         app:chipStrokeWidth="2dp"
-        app:chipText="Personal Account" />
+        app:chipText="Mpesa" />
 
     <android.support.design.button.MaterialButton
         android:id="@+id/contr_contrbtn"

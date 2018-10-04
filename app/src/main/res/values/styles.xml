@@ -6,15 +6,20 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-
-        <style name="ChipsBaseText2" parent="@android:style/TextAppearance.Widget.Button">
-            <item name="android:textColor">@android:color/black</item>
-        </style>
-        <!--BottomNavigation-->
-        <style name="AppTheme.TranslucentNavigation" parent="AppTheme">
-            <item name="android:windowTranslucentNavigation">true</item>
-        </style>
-
     </style>
 
+    <!--  Text appearance for the chips-->
+    <style name="ChipsBaseText" parent="@android:style/TextAppearance.Small">
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="ChipsBaseText2" parent="@android:style/TextAppearance.Widget.Button">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+    <!--BottomNavigation-->
+    <style name="AppTheme.TranslucentNavigation" parent="AppTheme">
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <color name="colorWhite">#FFFFFF</color>
 </resources>
