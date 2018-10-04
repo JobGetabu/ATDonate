@@ -22,6 +22,7 @@ import com.africastalking.models.sms.Recipient;
 import com.africastalking.services.AirtimeService;
 import com.africastalking.services.PaymentService;
 import com.africastalking.services.SmsService;
+import com.africastalking.utils.Logger;
 import com.job.atdonate.R;
 
 import java.io.IOException;
@@ -42,6 +43,9 @@ public class DonateFragment extends BottomSheetDialogFragment {
 
 
     public static final String TAG = "DonateFrag";
+    //For the emulator, connecting to local host
+    private final String host = "192.168.8.101";
+    private final int port = 8088;
 
     @BindView(R.id.contr_groupname)
     TextView contrGroupname;
@@ -85,6 +89,7 @@ public class DonateFragment extends BottomSheetDialogFragment {
         super.onActivityCreated(savedInstanceState);
 
 
+        connectToServer();
     }
 
 
@@ -104,10 +109,10 @@ public class DonateFragment extends BottomSheetDialogFragment {
 
             valid = false;
         } else {
-            contrTextamount.setVisibility(View.VISIBLE);
-            contrEditImg.setVisibility(View.VISIBLE);
-            contrAmountinput.setVisibility(View.GONE);
-            contrAmountinput.setError(null);
+            dntP.setVisibility(View.VISIBLE);
+            dntEImg.setVisibility(View.VISIBLE);
+            dntPhoneNum.setVisibility(View.GONE);
+            dntPhoneNum.setError(null);
         }
 
         if (am.isEmpty() || am.equals("0")) {
@@ -212,6 +217,11 @@ public class DonateFragment extends BottomSheetDialogFragment {
 
     @OnClick(R.id.contr_contrbtn)
     public void onContrContrbtnClicked() {
+
+        if (validateOnPay()){
+
+            sendMessage("0708440184","Donor test app");
+        }
     }
 
     @OnClick({R.id.dnt_p,R.id.dnt_e_img})
@@ -362,5 +372,46 @@ public class DonateFragment extends BottomSheetDialogFragment {
 
         //Execute our task
         taskSendAirtime.execute();
+    }
+
+    /*
+    implementation of connectToServer()
+     */
+    private void connectToServer(){
+
+        //Initialize te sdk, and connect to our server. Do this in a try catch block
+        try{
+
+
+
+            /*
+            Put a notice in our log that we are attempting to initialize
+             */
+            Log.e("NOTICE","Attempting to intialize server");
+            AfricasTalking.initialize(host, port,true);
+
+            //Use AT's Logger to get any message
+            AfricasTalking.setLogger(new Logger() {
+                @Override
+                public void log(String message, Object... args) {
+
+                    /*
+                    Log this too
+                     */
+                    Log.e("FROM AT LOGGER",message + " " + args.toString());
+                }
+            });
+
+            /*
+            Final log to tell us if successful
+             */
+            Log.e("SERVER SUCCESS","Managed to connect to server");
+        } catch (IOException e){
+
+            /*
+            Log our failure to connect
+             */
+            Log.e("SERVER ERROR", "Failed to connect to server");
+        }
     }
 }

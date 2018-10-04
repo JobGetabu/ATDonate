@@ -236,7 +236,7 @@
             app:chipSpacingVertical="@dimen/spacing_micro"
             app:chipStrokeColor="@android:color/darker_gray"
             app:chipStrokeWidth="2dp"
-            app:chipText="Donate via Airtime" />
+            app:chipText="Donate Airtime" />
     </LinearLayout>
 
 
