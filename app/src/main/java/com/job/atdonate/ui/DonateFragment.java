@@ -29,8 +29,7 @@ public class DonateFragment extends BottomSheetDialogFragment {
 
 
     public static final String TAG = "DonateFrag";
-    @BindView(R.id.contr_type)
-    TextView contrType;
+
     @BindView(R.id.contr_groupname)
     TextView contrGroupname;
     @BindView(R.id.contr_textamount)
@@ -42,11 +41,17 @@ public class DonateFragment extends BottomSheetDialogFragment {
     @BindView(R.id.contr_contrbtn)
     MaterialButton contrContrbtn;
     Unbinder unbinder;
-    
+    @BindView(R.id.dnt_p)
+    TextView dntP;
+    @BindView(R.id.dnt_e_img)
+    ImageButton dntEImg;
+    @BindView(R.id.dnt_phone_num)
+    TextInputLayout dntPhoneNum;
+
 
     //starter progress
     private SweetAlertDialog pDialog;
-    
+
 
     public DonateFragment() {
         // Required empty public constructor
@@ -145,16 +150,26 @@ public class DonateFragment extends BottomSheetDialogFragment {
         contrAmountinput.getEditText().setText(newstr);
         contrTextamount.setVisibility(View.GONE);
         contrEditImg.setVisibility(View.GONE);
+
+        dntPhoneNum.setVisibility(View.GONE);
+        dntP.setVisibility(View.VISIBLE);
+        dntEImg.setVisibility(View.VISIBLE);
     }
 
-    @OnClick({R.id.main_kjhgf, R.id.textView3, R.id.contr_type,
-            R.id.contr_groupname, R.id.asdsgroup, R.id.sdesgroup,
+    @OnClick({R.id.main_kjhgf, R.id.textView3, R.id.airtimechip,
+            R.id.contr_groupname, R.id.asdsgroup, R.id.mpesachip,
             R.id.textView6contr})
     public void onHideContrInputField() {
         contrAmountinput.setVisibility(View.GONE);
         contrTextamount.setVisibility(View.VISIBLE);
         contrEditImg.setVisibility(View.VISIBLE);
+
+        dntPhoneNum.setVisibility(View.GONE);
+        dntP.setVisibility(View.VISIBLE);
+        dntEImg.setVisibility(View.VISIBLE);
+
         String am = contrAmountinput.getEditText().getText().toString();
+        String pn = dntPhoneNum.getEditText().getText().toString();
 
         double temp = 0;
         try {
@@ -163,9 +178,28 @@ public class DonateFragment extends BottomSheetDialogFragment {
             Log.e(TAG, "onHideInputField: ", e);
         }
         contrTextamount.setText(formatMyMoney(temp) + "/-");
+        dntP.setText(pn);
     }
 
     @OnClick(R.id.contr_contrbtn)
     public void onContrContrbtnClicked() {
     }
+
+    @OnClick({R.id.dnt_p,R.id.dnt_e_img})
+    public void onPhoneEditIcon() {
+        dntPhoneNum.setVisibility(View.VISIBLE);
+        String ph = dntP.getText().toString();
+        String phstr = ph.replaceAll("Phone number ", "");
+
+
+        dntPhoneNum.getEditText().setText(phstr);
+
+        dntP.setVisibility(View.GONE);
+        dntEImg.setVisibility(View.GONE);
+
+        contrAmountinput.setVisibility(View.GONE);
+        contrTextamount.setVisibility(View.VISIBLE);
+        contrEditImg.setVisibility(View.VISIBLE);
+    }
+
 }
