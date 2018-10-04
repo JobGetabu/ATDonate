@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="statusBarSize">24dp</dimen>
+
+    <dimen name="spacing_normal">8dp</dimen>
+    <dimen name="spacing_micro">4dp</dimen>
+    <dimen name="padding_normal">16dp</dimen>
+    <dimen name="padding_normal_button">12dp</dimen>
+
+   <!-- transitions and group control dimens -->
+    <dimen name="dp160">160dp</dimen>
+    <dimen name="dp190">190dp</dimen>
+
+
+    <!--fabs-->
+    <dimen name="fab_margin_right">0dp</dimen>
+    <dimen name="fab_margin_bottom">0dp</dimen>
+
+</resources>
