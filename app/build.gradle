@@ -9,6 +9,12 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        //code added to help us use AT SDK libraries
+        ndk {
+            abiFilters "armeabi", "x86"
+        }
+
     }
     buildTypes {
         release {
@@ -18,11 +24,23 @@ android {
     }
 }
 
+//Code added to help us use AT SDK Libraries
+repositories {
+
+    maven {
+        url "http://dl.bintray.com/africastalking/android"
+    }
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //Code added to help us use AT SDK Libraries
+    implementation 'com.africastalking:client:3.0.6'
 }
