@@ -10,7 +10,11 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    //Code to provide us with AT SDK libraries to run our server
+    implementation 'com.africastalking:server:3.0.6'
 }
+
 
 sourceCompatibility = "1.7"
 targetCompatibility = "1.7"
