@@ -25,7 +25,6 @@ import com.africastalking.services.PaymentService;
 import com.africastalking.services.SmsService;
 import com.africastalking.utils.Logger;
 import com.job.atdonate.R;
-import com.job.atdonate.ui.appexecutor.DefaultExecutorSupplier;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -337,85 +336,91 @@ public class DonateFragment extends BottomSheetDialogFragment {
     */
     private void sendPayment(final String number, final String amount, final SweetAlertDialog pD) {
 
-
-        DefaultExecutorSupplier.getInstance().forBackgroundTasks()
-                .submit(new Runnable() {
-                    @Override
-                    public void run() {
-                          /*
-                same try catch block
-                 */
-                        try {
-
-                            //Log it
-                            Log.e("PAYMENT ALERT", "Trying to checkout");
-
-                            //get our payment service
-                            PaymentService paymentService = AfricasTalking.getPaymentService();
-
-                            //Create a checkout request
-                            MobileCheckoutRequest checkoutRequest = new MobileCheckoutRequest("Donation with AT", "KES " + amount, number);
-
-                            //Initiate the checkout, using the checkoutrequest
-                            CheckoutResponse response = paymentService.checkout(checkoutRequest);
-
-                            //Log the response
-                            Log.e("PAYMENT RESPONSE", response.transactionId + " " + response.status + " " + response.description);
-
-
-                                pD.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pD.setCancelable(false);
-                            pD.setContentText("Successful" +"\n"+response.status+"\n" + response.description);
-                            pD.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                    @Override
-                                    public void onClick(SweetAlertDialog sDialog) {
-                                        sDialog.dismissWithAnimation();
-                                        dismiss();
-
-                                    }
-                                });
-
-                        } catch (IOException e) {
-
-                            Log.e("PAYMENT FAILURE", "Failed to check out with exception " + e.toString());
-
-                            pD.changeAlertType(SweetAlertDialog.ERROR_TYPE);
-                            pD.setCancelable(false);
-                            pD.setContentText("Failed to donate");
-                            pD.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sDialog) {
-                                    sDialog.dismissWithAnimation();
-                                    dismiss();
-                                    //navHome(1);
-                                }
-                            });
-                        }
-                    }
-                });
-
         /*
         implement a demo checkout to this app
-
+        */
         @SuppressLint("StaticFieldLeak") AsyncTask<Void, String, Void> paymentTask = new AsyncTask<Void, String, Void>() {
+
+            CheckoutResponse response;
+
             @Override
             protected Void doInBackground(Void... voids) {
 
+                /*
+                same try catch block
+                 */
+                try {
+
+                    //Log it
+                    Log.e("PAYMENT ALERT", "Trying to checkout");
+
+                    //get our payment service
+                    PaymentService paymentService = AfricasTalking.getPaymentService();
+
+                    //Create a checkout request
+                    MobileCheckoutRequest checkoutRequest = new MobileCheckoutRequest("Donation with AT", "KES " + amount, number);
+
+                    //Initiate the checkout, using the checkoutrequest
+                    response = paymentService.checkout(checkoutRequest);
+
+                    //Log the response
+                    Log.e("PAYMENT RESPONSE", response.transactionId + " " + response.status + " " + response.description);
+
+
+                } catch (IOException e) {
+
+                    Log.e("PAYMENT FAILURE", "Failed to check out with exception " + e.toString());
+                }
+
 
                 return null;
+            }
+
+            @Override
+            protected void onPostExecute(Void aVoid) {
+                super.onPostExecute(aVoid);
+
+                pD.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
+                pD.setCancelable(false);
+                pD.setContentText("Successful Donated" + "\n" + "Transaction id" + "\n" + response.transactionId);
+                pD.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        dismiss();
+
+                    }
+                });
+            }
+
+            @Override
+            protected void onCancelled() {
+                super.onCancelled();
+
+                pD.changeAlertType(SweetAlertDialog.ERROR_TYPE);
+                pD.setCancelable(false);
+                pD.setContentText("Failed to donate");
+                pD.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                        dismiss();
+                        //navHome(1);
+                    }
+                });
             }
         };
 
         //Execute our task
         paymentTask.execute();
 
-        */
+
     }
 
     /*
     implementation of sendAirtime()
      */
-    private void sendAirtime(final HashMap<String, String> recipient, final String sendToName,final SweetAlertDialog pD) {
+    private void sendAirtime(final HashMap<String, String> recipient, final String sendToName, final SweetAlertDialog pD) {
 
         /*
         Run our code in a separate thread from the UI thread, using AsyncTask. Required by Android for all Network calls
@@ -463,7 +468,7 @@ public class DonateFragment extends BottomSheetDialogFragment {
 
                 pD.changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
                 pD.setCancelable(false);
-                pD.setContentText("Successfully donated \n" + response.totalAmount + "\n to"+sendToName);
+                pD.setContentText("Successfully donated \n" + response.totalAmount + "\n to" + sendToName);
                 pD.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
@@ -491,7 +496,6 @@ public class DonateFragment extends BottomSheetDialogFragment {
                 });
             }
         };
-
 
 
         //Execute our task
